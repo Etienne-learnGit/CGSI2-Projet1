@@ -6,7 +6,7 @@ from TracerDessinAvecFacette import *
 from stl import mesh
 from mpl_toolkits import mplot3d
 
-class BoatIHM(QWidget):
+class boatIHM(QWidget):
     def __init__(self):
         QWidget.__init__(self)
         self.setWindowTitle("Boat sinking interface")
@@ -57,9 +57,19 @@ class test(QWidget):
 
         scale = your_mesh.points.flatten("C")
         axes.auto_scale_xyz(scale, scale, scale)
+        return
+
+class test2(QWidget):
+    def __init__(self):
+        QWidget.__init__(self)
+        self.fig = plt.figure()
+        self.canvas = FigureCanvas(self.fig)
+        ax = plt.axes(projection='2d')
+
+    def affichageCourbe(self):
 
 if __name__ == "__main__":
    app = QApplication([])
-   win = BoatIHM()
+   win = boatIHM()
    win.show()
    app.exec_()

@@ -17,7 +17,6 @@ class extractionSTL():
             self.lectureBlocDeSeptLignes(lst[:7])
             x = x-7
             lst = lst[-x:]
-
         return self.__listeNormales, self.__listeFacette
 
     def lectureBlocDeSeptLignes(self, lst):
@@ -36,11 +35,14 @@ class extractionSTL():
         return
 
 class operationSurLesFacettesEtLesNormales():
-    def __init__(self, listeNormales, listeFacettes):
+    def __init__(self, listeNormales, listeFacettes, masseBateau):
         self.__listeN = listeNormales
         self.__listeF = listeFacettes
+        self.__masseBateau = masseBateau
         self.__coodDeG = []
         self.__forcesPression = []
+        self.__forceArchimede = 0
+        self.__forcePoids = 0
 
     def calculDesCoordonneesDesG(self):
         x = len(self.__listeF)-1
@@ -80,35 +82,19 @@ class operationSurLesFacettesEtLesNormales():
         x = len(self.__forcesPression)-1
         for i in range(0, x):
             PA += self.__forcesPression[i]
-        return PA
+        self.__forceArchimede = PA
+        return self.__forceArchimede
 
     def translationDesFacette(self, indiceDeTranslation):
         x = indiceDeTranslation
         for elt in range(0, len(self.__listeF)-1) :
             for elt2 in range(0, 3):
                 self.__listeF[elt][elt2][-1] = self.__listeF[elt][elt2][-1] + x
-        #print("affichage liste Facettes apres transalation : ")
+        print("affichage liste Facettes apres transalation : ")
         print(self.__listeF)
         return self.__listeF
 
-
-#Programme Principal
-chemin = r"Maillage\Rectangular_HULL.stl"
-STL1 = extractionSTL(chemin)
-listeN, listeF = STL1.extractionDesListes()
-print(listeN)
-print(listeF)
-
-objetSTL1 = operationSurLesFacettesEtLesNormales(listeN, listeF)
-
-lstCoordonneesDeG = objetSTL1.calculDesCoordonneesDesG()
-print("coordonnees de tous les g : ")
-print(lstCoordonneesDeG)
-
-forcesDePression = objetSTL1.calculDesForcesDesPressions()
-print("Toutes les forces de pressions des facettes immergees : ")
-print(forcesDePression)
-
-PA = objetSTL1.pousseeArchimede()
-print("pousse Archimede : ")
-print(PA)
+    def calculForcePoids(self, masseBateau):
+        p = masseBateau * 9.8
+        self.__forcePoids = p
+        return self.__forcePoids

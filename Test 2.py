@@ -5,16 +5,10 @@ from OperationSurFichierSTL import *
 chemin, masseboat, listeN, listeF = start()
 
 #Test Operation sur Fichiers STL
-objetSTL1 = operationSurLesFacettesEtLesNormales(listeN, listeF, masseboat)
+B1 = operationSurLesFacettesEtLesNormales(listeN, listeF, masseboat)
 
-lstCoordonneesDeG = objetSTL1.calculDesCoordonneesDesG()
-print("coordonnees de tous les g : ")
-print(lstCoordonneesDeG)
+#print("coordonnees des g : ",B1.calculDesCoordonneesDesG())
 
-forcesDePression = objetSTL1.calculDesForcesDesPressions()
-print("Toutes les forces de pressions des facettes immergees : ")
-print(forcesDePression)
+#print("Les forces de pressions : ", B1.calculDesForcesDesPressions())
 
-PA = objetSTL1.pousseeArchimede()
-print("pousse Archimede : ")
-print(PA)
+print("pousse Archimede : ", B1.pousseeArchimede())

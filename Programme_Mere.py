@@ -1,3 +1,5 @@
+from OperationSurFichierSTL import *
+
 class extractionSTL():
     def __init__(self, chemin):
         self.__cheminSTL = chemin
@@ -54,3 +56,5 @@ def start():
     stl = extractionSTL(chemin)
     listN, listF = stl.extractionDesListes()
     return chemin, masseboat, listN, listF
+
+

@@ -11,8 +11,9 @@ class operationSurLesFacettesEtLesNormales():
 
         self.__coodDeG = []
         self.__forcesPression = []
-        self.__niveauEau = 1
+        self.__niveauEau = 0.5
         self.__tirantEau = 0
+        self.__hauteurMax = 0
 
     def getForcePoids(self):
         return self.__forcePoids
@@ -24,6 +25,8 @@ class operationSurLesFacettesEtLesNormales():
         return self.__niveauEau
     def getTirantEau(self):
         return self.__tirantEau
+    def getHauteurMax(self):
+        return self.__hauteurMax
 
     def setMasse(self, masse):
         self.__forcePoids = masse * 9.8
@@ -33,30 +36,38 @@ class operationSurLesFacettesEtLesNormales():
     def pousseeArchimede(self):
         self.calculDesCoordonneesDesG()
         self.calculDesForcesDesPressions()
+        self.calculHauteurMaximal()
         self.tirantEau()
-        PA = 0
+        PA = [0,0,0]
         x = len(self.__forcesPression)
         for i in range(0, x):
-            PA += self.__forcesPression[i]
+            PA[0] += self.__forcesPression[i][0]
+            PA[1] += self.__forcesPression[i][1]
+            PA[2] += self.__forcesPression[i][2]
         self.__forceArchimede = PA
         return self.__forceArchimede
 
     def calculDesForcesDesPressions(self):
+        self.calculDesCoordonneesDesG()
         x = len(self.__listeF)
         for elt in range(0, x) :
             AB = np.array([self.__listeF[elt][1][0]-self.__listeF[elt][0][0],self.__listeF[elt][1][1]-self.__listeF[elt][0][1],self.__listeF[elt][1][2]-self.__listeF[elt][0][2]])
             AC = np.array([ self.__listeF[elt][2][0]-self.__listeF[elt][0][0],self.__listeF[elt][2][1]-self.__listeF[elt][0][1],self.__listeF[elt][2][2]-self.__listeF[elt][0][2]])
+
+            N = -np.array([self.__listeN[elt][0], self.__listeN[elt][1], self.__listeN[elt][2]])
+
             vectSurface = np.cross(AB, AC) / 2
             normeSurface = np.vdot(vectSurface, vectSurface)**(1/2)
-            forcePression = self.calculDePressionFacetteImergee(elt) * normeSurface
+            forcePression = self.calculDePressionFacetteImergee(elt)* N * normeSurface
             self.__forcesPression.append(forcePression)
         return self.__forcesPression
 
     def calculDePressionFacetteImergee(self, indice):
         if self.__coodDeG[indice][2] < self.__niveauEau :
+            pointG = np.array([self.__coodDeG[indice][0], self.__coodDeG[indice][1], self.__coodDeG[indice][2]])
             rot = 1025
             g = 9.8
-            pression = rot*g*self.__coodDeG[indice][2] #coordonnées des GZ
+            pression = -rot*g*pointG #coordonnées de g
             return pression
         else:
             return 0
@@ -74,8 +85,8 @@ class operationSurLesFacettesEtLesNormales():
             self.__coodDeG.append(g)
         return self.__coodDeG
 
-    def translationDesFacette(self, indiceDeTranslation):
-        x = indiceDeTranslation
+    def translationDesFacette(self, valeurDeTranslation):
+        x = valeurDeTranslation
         for elt in range(0, len(self.__listeF)) :
             for elt2 in range(0, 3):
                 self.__listeF[elt][elt2][-1] = self.__listeF[elt][elt2][-1] + x
@@ -89,3 +100,10 @@ class operationSurLesFacettesEtLesNormales():
                 lst.append(self.__listeF[i][elt][2])
         pointLePlusBas = min(lst)
         return self.__niveauEau - pointLePlusBas
+
+    def calculHauteurMaximal(self):
+        lst = []
+        for i in range(0, len(self.__listeF)):
+            for elt in range(0, 3):
+                lst.append(self.__listeF[i][elt][2])
+        return max(lst)

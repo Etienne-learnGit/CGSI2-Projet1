@@ -1,12 +1,11 @@
+from Programme_Mere import *
 from OperationSurFichierSTL import *
 
-chemin = r"Maillage\V_HULL.stl"
-STL1 = extractionSTL(chemin)
-listeN, listeF = STL1.extractionDesListes()
-#print(listeN)
-#print(listeF)
+#Test ProgrammeMere
+chemin, masseboat, listeN, listeF = start()
 
-objetSTL1 = operationSurLesFacettesEtLesNormales(listeN, listeF, 1500)
+#Test Operation sur Fichiers STL
+objetSTL1 = operationSurLesFacettesEtLesNormales(listeN, listeF, masseboat)
 
 lstCoordonneesDeG = objetSTL1.calculDesCoordonneesDesG()
 print("coordonnees de tous les g : ")
